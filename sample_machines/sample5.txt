@@ -5,7 +5,7 @@ STACK S2
 
 .LOGIC
 
-A] WRITE(S1)  (#,B)
+A] WRITE(S1) (#,B)
 B] SCAN (a,C), (b,E)
 C] WRITE(S1) (X,B)
 D] WRITE(S2) (X,F)

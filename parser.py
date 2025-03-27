@@ -42,5 +42,5 @@ def parse(stream):
 
 
 if __name__ == '__main__':
-    with open('input.txt', 'r') as machine_input:
+    with open('sample_machines/sample1.txt', 'r') as machine_input:
         parse(machine_input)
