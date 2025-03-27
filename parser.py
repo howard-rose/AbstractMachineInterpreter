@@ -2,6 +2,7 @@ from machine import *
 from tape import *
 from memory_object import *
 from io import StringIO
+import re
 
 
 def parse_data(lines):
@@ -21,10 +22,13 @@ def parse_data(lines):
 
 
 def parse_logic(lines):
+    logic_regex = re.compile(r'^(?P<state>\w+)] (?P<command>\w+(?: RIGHT| LEFT)?)(?:\((?P<arg>\w+)\))? (?P<transitions>.*)$')
+
     for line in lines:
-        match line.rstrip().split():
-            case state, command, *transitions:
-                print(state[:-1], command, transitions)
+        m = logic_regex.match(line)
+        if m:
+            #print(m.group('state'), m.group('command'), m.group('transitions'))
+            print(m.groupdict())
 
 
 def parse_command(command):
@@ -42,5 +46,5 @@ def parse(stream):
 
 
 if __name__ == '__main__':
-    with open('sample_machines/sample1.txt', 'r') as machine_input:
+    with open('sample_machines/sample3.txt', 'r') as machine_input:
         parse(machine_input)
