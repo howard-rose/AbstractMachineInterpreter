@@ -1,7 +1,6 @@
 from machine import *
 from tape import *
 from memory_object import *
-from io import StringIO
 import re
 
 
@@ -22,17 +21,48 @@ def parse_data(lines):
 
 
 def parse_logic(lines):
-    logic_regex = re.compile(r'^(?P<state>\w+)] (?P<command>\w+(?: RIGHT| LEFT)?)(?:\((?P<arg>\w+)\))? (?P<transitions>.*)$')
+    logic_regex = re.compile(
+        r'^(?P<state>\w+)] (?P<command>\w+(?: RIGHT| LEFT)?)(?:\((?P<arg>\w+)\))? (?P<transitions>.*)$')
+    transition_regex = re.compile(r'\((?P<symbol>\S+),(?P<state>\S+)\)')
+    overwrite_regex = re.compile(r'\((?P<symbol>\S+)/(?P<overwrite>\S+),(?P<state>\S+)\)')
+
+    states = {}
 
     for line in lines:
-        m = logic_regex.match(line)
-        if m:
-            #print(m.group('state'), m.group('command'), m.group('transitions'))
-            print(m.groupdict())
+        l_match = logic_regex.match(line)
+        if l_match:
+            # print(l_match.groupdict())
+            # print(l_match['transitions'].split(', '))
 
+            transitions = {}
+            overwrites = {} if l_match['command'] == 'LEFT' or l_match['command'] == 'RIGHT' else None
 
-def parse_command(command):
-    pass
+            for t in l_match['transitions'].split(', '):
+                if l_match['command'] == 'LEFT' or l_match['command'] == 'RIGHT':
+                    t_match = overwrite_regex.match(t)
+
+                    if t_match['symbol'] not in overwrites:
+                        overwrites[t_match['symbol']] = []
+                    overwrites[t_match['symbol']].append(t_match['overwrite'])
+                else:
+                    t_match = transition_regex.match(t)
+
+                if t_match['symbol'] not in transitions:
+                    transitions[t_match['symbol']] = []
+                transitions[t_match['symbol']].append(t_match['state'])
+
+            state = State(
+                command=l_match['command'],
+                transitions=transitions,
+                receiver=l_match['arg'],
+                overwrites=overwrites
+            )
+
+            # print(state, end='\n\n')
+
+            states[l_match['state']] = state
+
+    return states
 
 
 def parse(stream):
@@ -41,10 +71,17 @@ def parse(stream):
     logic_index = lines.index('.LOGIC\n')
     data_section, logic_section = lines[:logic_index], lines[logic_index:]
 
-    print(parse_data(data_section))
-    parse_logic(logic_section)
+    memory, tapes = parse_data(data_section)
+    states = parse_logic(logic_section)
+
+    # print(memory)
+    # print(tapes)
+    # for k, v in states.items():
+    #     print(f'{k}: {v}')
+
+    return Machine(states, memory, tapes)
 
 
 if __name__ == '__main__':
-    with open('sample_machines/sample3.txt', 'r') as machine_input:
-        parse(machine_input)
+    with open('sample_machines/sample1.txt', 'r') as machine_input:
+        print(parse(machine_input))
