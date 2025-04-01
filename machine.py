@@ -23,15 +23,18 @@ class Timeline:
 
 
 class Machine:
-    def __init__(self, states, memory=None, tapes=None):
+    def __init__(self, states, memory=None, tapes=None, input=None):
         self.states = states
-        self.timelines = [Timeline(
+        self.initial = Timeline(
             memory=memory if memory else {},
             tapes=tapes if tapes else {},
             input=tapes[next(iter(tapes))] if tapes else Tape(),
             output='',
             state=next(iter(states))
-        )]
+        )
+
+        self.timelines = [copy.deepcopy(self.initial)]
+        self.timelines[0].input.set_tape(input)
 
     def step(self):
         new_timelines = []
