@@ -32,15 +32,21 @@ class Machine:
             output='',
             state=next(iter(states))
         )
+        self.verdict = None
 
         self.timelines = [copy.deepcopy(self.initial)]
-        self.timelines[0].input.set_tape(input)
+        if input:
+            self.timelines[0].input.set_tape(input)
 
     def step(self):
         new_timelines = []
 
-        while self.timelines:
-            timeline = self.timelines.pop()
+        for timeline in self.timelines:
+            if timeline.state == 'accept' or timeline.state == 'reject':
+                self.verdict = timeline.state
+                new_timelines.append(timeline)
+                continue
+
             curr_state = self.states[timeline.state]
             new_tl = copy.deepcopy(timeline)
 
