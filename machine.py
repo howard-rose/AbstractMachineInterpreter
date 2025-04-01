@@ -1,3 +1,4 @@
+import copy
 from dataclasses import dataclass
 
 from memory_object import *
@@ -33,31 +34,86 @@ class Machine:
         )]
 
     def step(self):
-        for timeline in self.timelines:
+        new_timelines = []
+
+        while self.timelines:
+            timeline = self.timelines.pop()
             curr_state = self.states[timeline.state]
+            new_tl = copy.deepcopy(timeline)
+
             match curr_state.command:
                 case 'SCAN' | 'SCAN RIGHT':
-                    timeline.input.right()
-                    symbol = timeline.input.scan()
+                    new_tl.input.right()
+                    symbol = new_tl.input.scan()
+                    next_states = curr_state.transitions[symbol]
+                    for state in next_states:
+                        temp_new_tl = copy.deepcopy(new_tl)
+                        temp_new_tl.state = state
+                        new_timelines.append(temp_new_tl)
                 case 'SCAN LEFT':
-                    timeline.input.left()
-                    symbol = timeline.input.scan()
+                    new_tl.input.left()
+                    symbol = new_tl.input.scan()
+                    next_states = curr_state.transitions[symbol]
+                    for state in next_states:
+                        temp_new_tl = copy.deepcopy(new_tl)
+                        temp_new_tl.state = state
+                        new_timelines.append(temp_new_tl)
                 case 'PRINT':
-                    symbols = []
-                    for transition in curr_state.transitions:
-                        symbols.append(transition)
+                    for symbol, next_states in curr_state.transitions.items():
+                        for state in next_states:
+                            temp_new_tl = copy.deepcopy(new_tl)
+                            temp_new_tl.output += symbol
+                            temp_new_tl.state = state
+                            new_timelines.append(temp_new_tl)
                 case 'READ':
-                    pass
+                    new_tl.input.left()
+                    symbol = new_tl.input.scan()
+                    next_states = curr_state.transitions[symbol]
+                    for state in next_states:
+                        temp_new_tl = copy.deepcopy(new_tl)
+                        temp_new_tl.state = state
+                        new_timelines.append(temp_new_tl)
                 case 'WRITE':
-                    pass
+                    for symbol, next_states in curr_state.transitions.items():
+                        for state in next_states:
+                            temp_new_tl = copy.deepcopy(new_tl)
+                            temp_new_tl.memory[curr_state.receiver].write(symbol)
+                            temp_new_tl.state = state
+                            new_timelines.append(temp_new_tl)
                 case 'RIGHT':
-                    pass
+                    new_tl.tapes[curr_state.receiver].right()
+                    symbol = new_tl.tapes[curr_state.receiver].scan()
+                    next_states = curr_state.transitions[symbol]
+                    for state in next_states:
+                        temp_new_tl = copy.deepcopy(new_tl)
+                        temp_new_tl.state = state
+                        new_timelines.append(temp_new_tl)
                 case 'LEFT':
-                    pass
+                    new_tl.tapes[curr_state.receiver].left()
+                    symbol = new_tl.tapes[curr_state.receiver].scan()
+                    next_states = curr_state.transitions[symbol]
+                    for state in next_states:
+                        temp_new_tl = copy.deepcopy(new_tl)
+                        temp_new_tl.state = state
+                        new_timelines.append(temp_new_tl)
                 case 'UP':
-                    pass
+                    new_tl.tapes[curr_state.receiver].up()
+                    symbol = new_tl.tapes[curr_state.receiver].scan()
+                    next_states = curr_state.transitions[symbol]
+                    for state in next_states:
+                        temp_new_tl = copy.deepcopy(new_tl)
+                        temp_new_tl.state = state
+                        new_timelines.append(temp_new_tl)
                 case 'DOWN':
-                    pass
+                    new_tl.tapes[curr_state.receiver].down()
+                    symbol = new_tl.tapes[curr_state.receiver].scan()
+                    next_states = curr_state.transitions[symbol]
+                    for state in next_states:
+                        temp_new_tl = copy.deepcopy(new_tl)
+                        temp_new_tl.state = state
+                        new_timelines.append(temp_new_tl)
+
+        self.timelines = new_timelines
 
     # def scan_right(self):
     #     self.input.right()
