@@ -16,6 +16,8 @@ def parse_data(lines):
                 memory[name] = Queue()
             case 'TAPE', name:
                 tapes[name] = Tape()
+            case '2D_TAPE', name:
+                tapes[name] = Tape2D()
 
     return memory, tapes
 
