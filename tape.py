@@ -53,6 +53,12 @@ class Tape:
     def left(self):
         self.head -= 1
 
+    def up(self):
+        raise NotImplementedError
+
+    def down(self):
+        raise NotImplementedError
+
 
 class Tape2D(Tape):
     def __init__(self):

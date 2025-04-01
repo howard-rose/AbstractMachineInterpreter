@@ -8,6 +8,9 @@ class MemoryObject(deque):
     def read(self):
         return self.pop()
 
+    def write(self):
+        raise NotImplementedError
+
 
 class Stack(MemoryObject):
     def __init__(self, *args, **kwargs):
