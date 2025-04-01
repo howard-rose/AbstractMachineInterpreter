@@ -8,7 +8,7 @@ class MemoryObject(deque):
     def read(self):
         return self.pop()
 
-    def write(self):
+    def write(self, val):
         raise NotImplementedError
 
 
