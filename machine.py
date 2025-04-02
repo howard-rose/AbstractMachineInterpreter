@@ -46,12 +46,6 @@ class Machine:
         new_timelines = []
 
         for timeline in self.timelines:
-            if timeline.state == 'accept' or (timeline.state == 'reject' and self.verdict != 'accept'):
-                self.verdict = timeline.state
-                print(self.verdict)
-                new_timelines.append(timeline)
-                continue
-
             curr_state = self.states[timeline.state]
             new_tl = copy.deepcopy(timeline)
 
@@ -140,5 +134,10 @@ class Machine:
                         if overwrite:
                             temp_new_tl.tapes[curr_state.receiver].write(overwrite)
                         new_timelines.append(temp_new_tl)
+
+        for timeline in new_timelines:
+            if timeline.state == 'accept' or (timeline.state == 'reject' and self.verdict != 'accept'):
+                self.verdict = timeline.state
+                print(self.verdict)
 
         self.timelines = new_timelines
