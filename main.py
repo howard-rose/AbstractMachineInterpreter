@@ -2,9 +2,24 @@ from typing import Annotated
 from io import StringIO
 
 from fastapi import Body, FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
 from parser import parse
 
 app = FastAPI()
+
+origins = [
+    "http://localhost:5173",
+    "localhost:5173"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
 
 machine = None
 
