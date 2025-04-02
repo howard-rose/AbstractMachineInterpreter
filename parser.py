@@ -2,6 +2,7 @@ from machine import *
 from tape import *
 from memory_object import *
 import re
+import json
 
 
 def parse_data(lines):
@@ -85,5 +86,17 @@ def parse(stream):
 
 
 if __name__ == '__main__':
-    with open('sample_machines/sample1.txt', 'r') as machine_input:
-        print(parse(machine_input))
+    with open('sample_machines/sample5.txt', 'r') as machine_input:
+        machine = parse(machine_input)
+        machine.timelines[0].input.set_tape('aaaabbbbcccc')
+
+        while not machine.verdict:
+            #input()
+            machine.step()
+            for tl in machine.timelines:
+                print(tl)
+                print(f'Current state: {tl.state} -> {machine.states[tl.state] if tl.state != 'reject' and tl.state != 'accept' else ''}')
+                print(tl.input)
+                print(tl.input.head * ' ' + '^')
+
+        print(json.dumps(machine, default=vars))
