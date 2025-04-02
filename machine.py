@@ -32,8 +32,14 @@ class Machine:
             output='',
             state=next(iter(states))
         )
-        self.verdict = None
 
+        self.verdict = None
+        self.timelines = [copy.deepcopy(self.initial)]
+        if input:
+            self.timelines[0].input.set_tape(input)
+
+    def reset(self, input):
+        self.verdict = None
         self.timelines = [copy.deepcopy(self.initial)]
         if input:
             self.timelines[0].input.set_tape(input)
