@@ -75,9 +75,11 @@ class Machine:
                             temp_new_tl.state = state
                             new_timelines.append(temp_new_tl)
                 case 'READ':
-                    new_tl.input.left()
-                    symbol = new_tl.input.scan()
-                    next_states = curr_state.transitions[symbol]
+                    try:
+                        symbol = new_tl.memory[curr_state.receiver].read()
+                        next_states = curr_state.transitions[symbol]
+                    except IndexError:
+                        next_states = ['reject']
                     for state in next_states:
                         temp_new_tl = copy.deepcopy(new_tl)
                         temp_new_tl.state = state
