@@ -104,7 +104,8 @@ class Machine:
                     for state, overwrite in zip(next_states, overwrites):
                         temp_new_tl = copy.deepcopy(new_tl)
                         temp_new_tl.state = state
-                        temp_new_tl.tapes[curr_state.receiver].write(overwrite)
+                        if overwrite:
+                            temp_new_tl.tapes[curr_state.receiver].write(overwrite)
                         new_timelines.append(temp_new_tl)
                 case 'LEFT':
                     new_tl.tapes[curr_state.receiver].left()
@@ -114,7 +115,8 @@ class Machine:
                     for state, overwrite in zip(next_states, overwrites):
                         temp_new_tl = copy.deepcopy(new_tl)
                         temp_new_tl.state = state
-                        temp_new_tl.tapes[curr_state.receiver].write(overwrite)
+                        if overwrite:
+                            temp_new_tl.tapes[curr_state.receiver].write(overwrite)
                         new_timelines.append(temp_new_tl)
                 case 'UP':
                     new_tl.tapes[curr_state.receiver].up()
@@ -124,7 +126,8 @@ class Machine:
                     for state, overwrite in zip(next_states, overwrites):
                         temp_new_tl = copy.deepcopy(new_tl)
                         temp_new_tl.state = state
-                        temp_new_tl.tapes[curr_state.receiver].write(overwrite)
+                        if overwrite:
+                            temp_new_tl.tapes[curr_state.receiver].write(overwrite)
                         new_timelines.append(temp_new_tl)
                 case 'DOWN':
                     new_tl.tapes[curr_state.receiver].down()
@@ -134,7 +137,8 @@ class Machine:
                     for state, overwrite in zip(next_states, overwrites):
                         temp_new_tl = copy.deepcopy(new_tl)
                         temp_new_tl.state = state
-                        temp_new_tl.tapes[curr_state.receiver].write(overwrite)
+                        if overwrite:
+                            temp_new_tl.tapes[curr_state.receiver].write(overwrite)
                         new_timelines.append(temp_new_tl)
 
         self.timelines = new_timelines

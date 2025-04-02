@@ -3,6 +3,7 @@
 STACK S1
 
 .LOGIC
+
 A] WRITE(S1) (#,B)
 B] SCAN RIGHT (a,C), (b,D)
 C] WRITE(S1) (X,B)
