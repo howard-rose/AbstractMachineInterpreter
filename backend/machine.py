@@ -1,8 +1,8 @@
 import copy
 from dataclasses import dataclass
 
-from memory_object import *
-from tape import *
+from backend.memory_object import *
+from backend.tape import *
 
 
 @dataclass

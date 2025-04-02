@@ -1,6 +1,7 @@
 import pytest
 
-from parser import *
+from backend.parser import parse
+from backend.machine import *
 
 
 @pytest.fixture(params=['sample1', 'sample2', 'sample3', 'sample4', 'sample5', 'sample6'])
