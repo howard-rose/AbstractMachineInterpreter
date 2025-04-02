@@ -36,7 +36,7 @@ def parse_logic(lines):
             # print(l_match.groupdict())
             # print(l_match['transitions'].split(', '))
 
-            transitions = {}
+            transitions = defaultdict(lambda: ['reject'])
             overwrites = {} if l_match['command'] == 'LEFT' or l_match['command'] == 'RIGHT' else None
 
             for t in l_match['transitions'].split(', '):

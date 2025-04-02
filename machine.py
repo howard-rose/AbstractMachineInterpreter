@@ -39,11 +39,16 @@ class Machine:
             self.timelines[0].input.set_tape(input)
 
     def step(self):
+        if self.verdict:
+            print(self.verdict)
+            return
+
         new_timelines = []
 
         for timeline in self.timelines:
-            if timeline.state == 'accept' or timeline.state == 'reject':
+            if timeline.state == 'accept' or (timeline.state == 'reject' and self.verdict != 'accept'):
                 self.verdict = timeline.state
+                print(self.verdict)
                 new_timelines.append(timeline)
                 continue
 
@@ -125,20 +130,3 @@ class Machine:
                         new_timelines.append(temp_new_tl)
 
         self.timelines = new_timelines
-
-    # def scan_right(self):
-    #     self.input.right()
-    #     symbol = self.input.scan()
-    #
-    # def scan_left(self):
-    #     self.input.left()
-    #     symbol = self.input.scan()
-    #
-    # def print(self):
-    #     pass
-    #
-    # def read(self, mem):
-    #     symbol = self.memory.read(mem)
-    #
-    # def write(self, mem, symbol):
-    #     self.memory.write(mem, symbol)
