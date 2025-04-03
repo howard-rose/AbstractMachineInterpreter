@@ -1,7 +1,7 @@
 import pytest
 import copy
 
-from tape import *
+from backend.tape import *
 
 
 @pytest.fixture

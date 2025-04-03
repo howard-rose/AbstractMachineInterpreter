@@ -1,6 +1,4 @@
-from machine import *
-from tape import *
-from memory_object import *
+from backend.machine import *
 import re
 import json
 
